@@ -8,4 +8,9 @@ class MessageModel {
     return MessageModel(
         role: json['message']['role'], content: json['message']['content']);
   }
+
+  toJson() => {
+        'role': role,
+        'content': content,
+      };
 }
