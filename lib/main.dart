@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_19/chat_cubit/chat_cubit.dart';
+import 'package:flutter_application_19/models/message_model.dart';
 import 'package:flutter_application_19/views/chat_view.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
-void main() {
+void main() async {
+  await Hive.initFlutter();
+  Hive.registerAdapter(MessageModelAdapter());
+  await Hive.openBox<MessageModel>('messages');
+
   runApp(const MyApp());
 }
 

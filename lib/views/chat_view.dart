@@ -4,6 +4,7 @@ import 'package:flutter_application_19/chat_cubit/chat_states.dart';
 import 'package:flutter_application_19/models/message_model.dart';
 import 'package:flutter_application_19/views/widgets/custom_text_field.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
 import '../services/chat_service.dart';
 
@@ -19,6 +20,7 @@ class _ChatViewState extends State<ChatView> {
   late final ScrollController scrollController;
   @override
   void initState() {
+    initMessages();
     super.initState();
     _controller = TextEditingController();
     scrollController = ScrollController();
@@ -34,6 +36,18 @@ class _ChatViewState extends State<ChatView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('Chat Gpt'),
+        actions: [
+          IconButton(
+              onPressed: () async {
+                var messagesBox = Hive.box<MessageModel>('messages');
+                await messagesBox.clear();
+                initMessages();
+              },
+              icon: const Icon(Icons.delete))
+        ],
+      ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16),
         child: BlocProvider(
@@ -54,6 +68,16 @@ class _ChatViewState extends State<ChatView> {
         ),
       ),
     );
+  }
+
+  void initMessages() {
+    var messages = Hive.box<MessageModel>('messages').values.toList();
+    if (messages.isEmpty) {
+      Hive.box<MessageModel>('messages').add(MessageModel(
+        role: 'developer',
+        content: 'You are a helpful assistant.',
+      ));
+    }
   }
 }
 
@@ -86,7 +110,7 @@ class ListViewBlocBonsumer extends StatelessWidget {
         }
       },
       builder: (context, state) {
-        var messages = BlocProvider.of<ChatCubit>(context).mesages;
+        var messages = Hive.box<MessageModel>('messages').values.toList();
         if (state is LoadingState) {
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
