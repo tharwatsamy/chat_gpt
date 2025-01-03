@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_19/chat_cubit/chat_cubit.dart';
 import 'package:flutter_application_19/views/chat_view.dart';
 
 void main() {
@@ -11,6 +12,7 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    ChatCubit chatCubit = ChatCubit();
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
@@ -124,3 +126,4 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 }
+//defiu 

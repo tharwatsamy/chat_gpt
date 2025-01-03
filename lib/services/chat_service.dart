@@ -4,7 +4,7 @@ import 'package:flutter_application_19/models/message_model.dart';
 import 'package:flutter_application_19/services/api_service.dart';
 
 class ChatService {
-  static Future<MessageModel> sendMessage(
+  static Future<String> sendMessage(
       {String model = "gpt-4o-mini", required List<dynamic> messages}) async {
     try {
       var data = await ApiService.postRequest(
@@ -21,12 +21,11 @@ class ChatService {
         choices.add(choiceModel);
       }
 
-      return messageModel;
+      return choices[0].messageModel.content;
     } on DioException catch (e) {
-
-    e.response.data
+      return '';
     } catch (e) {
-      return MessageModel(role: '', content: 'Error');
+      return '';
     }
   }
 }

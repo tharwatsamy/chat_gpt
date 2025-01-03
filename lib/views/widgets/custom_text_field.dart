@@ -1,7 +1,9 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_application_19/chat_cubit/chat_cubit.dart';
 import 'package:flutter_application_19/services/chat_service.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ChatTextField extends StatelessWidget {
   final List<dynamic> messages;
@@ -21,19 +23,8 @@ class ChatTextField extends StatelessWidget {
       onSubmitted: (value) async {
         controller.clear();
         rebuildUi();
-
-        messages.add({
-          "role": "user",
-          "content": value,
-        });
-        var responseMessage = await ChatService.sendMessage(
-          messages: messages,
-        );
-        rebuildUi();
-        messages.add({
-          "role": "assistant",
-          "content": responseMessage,
-        });
+        var chatCubit = BlocProvider.of<ChatCubit>(context);
+        chatCubit.sendMessage(value);
       },
       decoration: InputDecoration(
         hintText: 'Type a message',
